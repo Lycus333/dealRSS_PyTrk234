@@ -40,7 +40,7 @@
 # Setup file for trk234 library
 #
 
-from distutils.core import setup
+from setuptools import setup
 
 setup(name='TRK-2-34',
       version='1.0',
