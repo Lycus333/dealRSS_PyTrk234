@@ -29,48 +29,16 @@
 
 # trk234
 
-Python reader library and example usage scripts for the Deep Space Network's TRK 2-34 Tracking and Navigation Files (TNF) data format. This library is fully compliant with Revision N of the TRK-2-34 format, but is also valid for revisions beyond it. [^1]
-These utilities were produced by the Planetary Radar and Radio Sciences Group (332K) at the Jet Propulsion Laboratory, California Institute of Technology.
-
 深空网络 TRK 2-34 跟踪和导航文件 (TNF) 数据格式的 Python 阅读器库和示例使用脚本。该库完全兼容 TRK-2-34 格式的 N 版本，但也适用于其更高版本。[^1]
 这些实用程序由加州理工学院喷气推进实验室的行星雷达和射电科学组 (332K) 开发。
 
 
 ## Data Overview 数据架构说明
 
-To use this library one must first understand the organization and structure of the TRK-2-34 data format [^1], **it is highly recommended to read the Software Interface Specification document [^1] before continuing**.
-
-TNFs are the most primitive (and most voluminous) product of the closed-loop tracking system at the Deep Space Network. TRK 2-34 files are TNFs, and as such, may be referred to as either TNFs or TRK 2-34 depending on the user鈥檚 preference. Each TRK 2-34 file is produced in near-real time (NERT) as the spacecraft is being actively tracked by a given DSN station. SFDUs are ordered in the TRK 2-34 files in time-ascending order by the DSN.
-TRK 2-34 files are binary files in Standard Formatted Data Unit (SFDU) format. There are 18 distinct types of SFDUs organized into five groups. 
-
-
 要使用这个库，必须首先了解 TRK-2-34 数据格式的组织和结构 [^1]，**强烈建议在继续之前阅读软件接口规范文档 [^1]**。
 
 TNF 是深空网络闭环跟踪系统最原始（也是最庞大）的产品。TRK 2-34 文件就是 TNF，因此，根据用户的偏好，可以将其称为 TNF 或 TRK 2-34。每个 TRK 2-34 文件都是在航天器被特定 DSN 站主动跟踪时以近实时 (NERT) 方式生成的。DSN 按时间升序排列 TRK 2-34 文件中的 SFDU。
 TRK 2-34 文件是标准格式化数据单元 (SFDU) 格式的二进制文件。SFDU 共有 18 种不同的类型，分为五类。
-
-
-| Number | Data Class   | Description                       | SFDU Length (bytes) |
-|--------|--------------|-----------------------------------|---------------------|
-|      0 | Uplink       | Uplink Carrier Phase              | 162                 |
-|      1 | Downlink     | Downlink Carrier Phase            | 358                 |
-|      2 | Uplink       | Uplink Sequential Ranging Phase   | 194                 |
-|      3 | Downlink     | Downlink Sequential Ranging Phase | 304                 |
-|      4 | Uplink       | Uplink PN Ranging Phase           | 276                 |
-|      5 | Downlink     | Downlink PN Ranging Phase         | 388                 |
-|      6 | Derived      | Doppler Count                     | 200                 |
-|      7 | Derived      | Sequential Range                  | 330                 |
-|      8 | Derived      | Angles                            | 178                 |
-|      9 | Derived      | Ramp Frequency                    | 124                 |
-|     10 | Inferometric | VLBI                              | 204                 |
-|     11 | Derived      | DRVID                             | 182                 |
-|     12 | Filtered     | Smoothed Noise                    | 164                 |
-|     13 | Filtered     | Allan Deviation                   | 160                 |
-|     14 | Derived      | PN Range                          | 348                 |
-|     15 | Derived      | Tone Range                        | 194                 |
-|     16 | Derived      | Carrier Frequency Observable      | 182 + 18n           |
-|     17 | Derived      | Total Count Phase Observable      | 194 + 22n           |
-
 
 |  编号  |   数据类型    |              描述                 | SFDU 长度（字节）     |
 |--------|--------------|-----------------------------------|----------------------|
@@ -96,14 +64,6 @@ TRK 2-34 文件是标准格式化数据单元 (SFDU) 格式的二进制文件。
 
 ## Installation 安装
 
-This is a Python library package with scripts and configuration files.
-The library  can be installed by cloning the repository to your local machine and running:
-```
-pip install \path\to\trk234
-```
-Note the installation path. Add files from the `scripts/` directory to your execution path, and if using the `bin/` execution scripts, update the paths in the scripts appropriately.
-
-
 这是一个包含脚本和配置文件的 Python 库包。
 您可以通过将代码库克隆到本地计算机并运行以下命令来安装该库：
 ```
@@ -113,19 +73,6 @@ pip install \path\to\trk234
 
 
 ### Configuration 配置
-
-For users with complicated Python environments or wish to simplify the installation, several `bash` scripts are provided in the `bin/` directory. In each of the files, edit the statement to point to the correct directory the library is installed:
-```
-# update pythonpath for the correct libraries
-export PYTHONPATH=$PYTHONPATH:/home/source/trk234
-```
-
-Also update the location of the scripts:
-```
-# add the path of the script install directory
-SCRIPTDIR=/home/source/trk234/scripts
-```
-
 
 对于 Python 环境复杂或希望简化安装的用户，“bin/” 目录中提供了几个“bash”脚本。在每个文件中，编辑以下语句以指向库的正确安装目录：
 ```
@@ -142,16 +89,6 @@ SCRIPTDIR=/home/source/trk234/scripts
 
 ## Library Architecture 库结构设计
 
-A `Reader` class reads the TRK-2-34 file; from there, the file can be decoded and contents accessed through the `SFDU` class. One attribute in the `Reader` class is `sfdu_list`, which contains a list of `SFDU` classes. Each `SFDU` class contains
-* `SFDU.label`: SFDU Label
-* `SFDU.agg_chdo`: Aggregation CHDO
-* `SFDU.pri_chdo`: Primary CHDO
-* `SFDU.sec_chdo`: Secondary CHDO
-* `SFDU.trk_chdo`: Tracking Data CHDO
-
-Individual attributes from each of these, as documented in Column 2 of the data tables in the TRK-2-34 Software Interface Specification document [^1], contain the data.
-
-
 `Reader` 类读取 TRK-2-34 文件；然后，可以通过 `SFDU` 类解码文件并访问其内容。`Reader` 类中的一个属性是 `sfdu_list`，它包含 `SFDU` 类的列表。每个 `SFDU` 类包含：
 * `SFDU.label`：SFDU 标签
 * `SFDU.agg_chdo`：聚合 CHDO
@@ -164,31 +101,6 @@ Individual attributes from each of these, as documented in Column 2 of the data 
 
 ### Examples 示例
 #### Example: Basic file decoding 示例：基础文件解码
-
-The module reads and parses the SFDUs in a given TRK 2-34 binary file. To read a file, the basic syntax is:
-```
-import trk234
-
-f = trk234.Reader('filename.tnf')
-f.decode()
-
-sfdus = f.sfdu_list
-```
-
-This will read the raw binary data and determine the SFDU breaking points, then parse it into a list of SFDUs. If you are dealing with a large file, and only need to decode certain parts of the SFDU, optionally place one of the following keyword arguments into the decode() function:
-
-* `decode( label=False )` - Don't decode the label
-* `decode( agg_chdo=False )` - Don't decode the Aggregation CHDO
-* `decode( pri_chdo=False )` - Don't decode the Primary CHDO
-* `decode( sec_chdo=False )` - Don't decode the Secondary CHDO
-* `decode( trk_chdo=False )` - Don't decode the Tracking CHDO
-
-If you disable the decoding of the label, you can't decode anything else (not recommended). If you disable decoding of the Primary CHDO, you can't decode the Tracking CHDO.
-
-For example, it may be worth it to disable the Secondary CHDO and Tracking CHDO if you only need to know what data types are in the file, e.g.:
-```
-f.decode( sec_chdo=False, trk_chdo=False )
-```
 
 该模块读取并解析给定 TRK 2-34 二进制文件中的 SFDU。读取文件的基本语法如下：
 ```
@@ -237,7 +149,7 @@ print( info )
 ```
 
 #### Dumping to ASCII 转储为 ASCII
-Warning: this might produce very large about of text, depending on the size of the data file.
+
 警告：这可能会产生非常大的文本，具体取决于数据文件的大小。
 
 ```
@@ -251,7 +163,6 @@ for s in f.sfdu_list:
 
 #### Accessing attributes 访问属性
 
-Attributes are accessed from the respective CHDO. The qttribute names are idential to the "identifier" as specified in the TRK 2-34 documentation.
 属性可从相应的 CHDO 访问。属性名称与 TRK 2-34 文档中指定的“标识符”相同。
 
 ```
@@ -274,16 +185,6 @@ for s in f.sfdu_list:
 
 ### Read Downlink Information 读取下行链路信息
 
-Reads downlink information (sky frequency, system noise temperature, carrier signal-to-noise ratio, loop bandwidth) and prints to the terminal. Optionally filter by DSN station number, downlink band, and/or tracking mode.
-
-Usage: `trk234_dnlink.py [-h] [-l] [-d DSS] [-b BAND] [-m MODE] [-t] [-c] Input`
-
-Basic Example: *print to a text file*
-```
-trk234_dnlink.py GRV_JUGR_2016240_0635X55MC001V01.TNF > downlink.txt
-```
-
-
 读取下行链路信息（天空频率、系统噪声温度、载波信噪比、环路带宽）并打印到终端。可选择按 DSN 站号、下行链路频段和/或跟踪模式进行过滤。
 
 用法：`trk234_dnlink.py [-h] [-l] [-d DSS] [-b BAND] [-m MODE] [-t] [-c] Input`
@@ -295,21 +196,6 @@ trk234_dnlink.py GRV_JUGR_2016240_0635X55MC001V01.TNF > downlink.txt
 
 
 ### Dump Contents to ASCII 将内容转储为 ASCII
-
-Reads the TRK-2-34 data file, prints every attribute from each SFDU in a pseudo-JSON like format. Warning: this might produce very large about of text, depending on the size of the data file. Restrict the size of the dump with the options for maximum number and data type.
-
-Usage: `trk234_dump.py [-h] [-f FORMAT_CODE] [-m MAX] Input`
-
-Basic Example: *dump to text file*
-```
-trk234_dump.py GRV_JUGR_2016240_0635X55MC001V01.TNF > dump.txt
-```
-
-Complex Example: *dump only the first SFDU of carrier observable data type*
-```
-trk234_dump.py -m 1 -f 16 GRV_JUGR_2016240_0635X55MC001V01.TNF
-```
-
 
 读取 TRK-2-34 数据文件，以类似伪 JSON 的格式打印每个 SFDU 的所有属性。
 警告：这可能会产生大量的文本，具体取决于数据文件的大小。请使用最大数量和数据类型选项来限制转储的大小。
@@ -329,17 +215,6 @@ trk234_dump.py -m 1 -f 16 GRV_JUGR_2016240_0635X55MC001V01.TNF
 
 ### Extract an Individual Attribute 提取个体属性
 
-Reads the TRK-2-34 file, and prints the time history of a user-specified attribute from the TRK-2-34 documentation [^1]. Must provide the name of the attribute, and which part of the SFDU it is from (SFDU Label, Aggregation CHDO, Primary CHDO, Secondary CHDO or Tracking CHDO)
-
-Usage: `trk234_extract [-h] [-f FORMAT_CODE] [-p] [-t] [-i IDENTIFIER] [--label] [--agg] [--pri] [--sec] [--trk] Input`
-Required Options: one of `--label`, `--agg`, `--pri`, `--sec`, `--trk`, and `-i IDENTIFIER`
-
-Example: *extract the spacecraft ID from all SFDUs*
-```
-trk234_extract.py --sec -i scft_id GRV_JUGR_2016240_0635X55MC001V01.TNF > scft_id.txt
-```
-
-
 读取 TRK-2-34 文件，并从 TRK-2-34 文档中打印用户指定属性的时间历史记录 [^1]。必须提供属性名称，以及它来自 SFDU 的哪个部分（SFDU 标签、聚合 CHDO、主 CHDO、辅助 CHDO 或跟踪 CHDO）。
 
 用法：`trk234_extract [-h] [-f FORMAT_CODE] [-p] [-t] [-i IDENTIFIER] [--label] [--agg] [--pri] [--sec] [--trk] Input`
@@ -353,7 +228,6 @@ trk234_extract.py --sec -i scft_id GRV_JUGR_2016240_0635X55MC001V01.TNF > scft_i
 
 ### Print Information from File 从文件打印信息
 
-Read a TRK-2-34 file and parse high-level information about the file, and print it to the terminal.
 读取 TRK-2-34 文件并解析有关该文件的高级信息，并将其打印到终端。
 
 Usage: `trk234_info.py [-h] [-p] [-m] [-q] Input`
@@ -392,23 +266,6 @@ Example Output:
 
 ### Purify/Filter a TRK-2-34 to SIS Compliance 净化/过滤 TRK-2-34 以符合 SIS 规范
 
-Remove non-compliant SFDUs from a TRK-2-34 file and optionally filter the data file by downlink band, uplink band, and DSN station number.
-
-**This is one of the required steps in labeling a TRK-2-34 file**
-
-Usage: `trk234_purify [-h] [-v] [-p] [-b DL_BAND] [-a UL_BAND] [-d DL_DSS_ID] [-u UL_DSS_ID] [-f FORMAT_CODE] Input Output`
-
-Example: *purify a TRK-2-34 file, removing the non-compliant CHDOs resulting from DSN marking some as bad*
-```
-trk234_purify.py 232511615SC61DSS35_noHdr.234 232511615SC61DSS35_noHdr.234.pure
-```
-
-Bulk Processing Example: *do this purification on a large number of data files*
-```
-find *234 -exec trk234_purify.py  {} {}.pure \; >> logfile.txt
-```
-
-
 从 TRK-2-34 文件中删除不合规的 SFDU，并可选择按下行链路频段、上行链路频段和 DSN 站号筛选数据文件。
 **这是标记 TRK-2-34 文件的必需步骤之一**
 用法：`trk234_purify [-h] [-v] [-p] [-b DL_BAND] [-a UL_BAND] [-d DL_DSS_ID] [-u UL_DSS_ID] [-f FORMAT_CODE] 输入 输出`
@@ -425,15 +282,6 @@ find *234 -exec trk234_purify.py {} {}.pure \; >> logfile.txt
 
 ### Read Uplink Information 读取上行链路信息
 
-Read the uplink ramp history from a TRK-2-34 file and print it out. The data printed is the ramp frequency and ramp rate.
-Usage: `trk234_ramp.py [-h] [-d DSS] [-b BAND] [-t] Input`
-
-Example: *print X-band ramps from DSS-55*
-```
-trk234_ramp.py -b X -d 55 GRV_JUGR_2016240_0635X55MC001V01.TNF > ramp_X_55.txt
-```
-
-
 从 TRK-2-34 文件中读取上行链路斜坡历史记录并打印出来。打印的数据是斜坡频率和斜坡速率。
 用法：`trk234_ramp.py [-h] [-d DSS] [-b BAND] [-t] 输入`
 
@@ -444,20 +292,6 @@ trk234_ramp.py -b X -d 55 GRV_JUGR_2016240_0635X55MC001V01.TNF > ramp_X_55.txt
 
 
 ### Sort a TRK-2-34 File by Data Type 按数据类型对 TRK-2-34 文件进行排序
-
-Sort (regroup) a TRK-2-34 file by data type (aka format code) into ascending order. This will make the TRK-2-34 file easier to label for PDS, but the SFDUs will no longer be in time-increasing order.
-**This is one of the required steps in labeling a TRK-2-34 file**
-Usage: `trk234_regroup.py [-h] [-v] [-p] [--validate] Input Output`
-
-Example:
-```
-trk234_regroup.py 232511615SC61DSS35_noHdr.234.pure 232511615SC61DSS35_noHdr.234.pure.sorted
-```
-Bulk Processing Example: *do this sorting on a large number of data files*
-```
-find *234.pure -exec trk234_regroup.py  {} {}.sorted \; >> logfile.txt
-```
-
 
 按数据类型（又称格式代码）对 TRK-2-34 文件进行升序排序（重组）。这将使 TRK-2-34 文件更易于为 PDS 进行标记，但 SFDU 将不再按时间递增顺序排列。
 **这是标记 TRK-2-34 文件的必需步骤之一**
