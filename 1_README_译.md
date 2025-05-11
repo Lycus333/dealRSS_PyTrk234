@@ -1,34 +1,4 @@
-整体结构：
 # trk234
-## Data Overview    数据架构说明 39
-
-## Installation     安装 97
-### Configuration   配置
-
-## Library Architecture             库结构设计 143
-### Examples                        示例
-#### Example: Basic file decoding   示例：基础文件解码
-#### Example: Print Attribute       示例：输出属性
-#### Example: Get info on a file    示例：获取文件信息
-#### Dumping to ASCII               转储为 ASCII
-#### Accessing attributes           访问属性
-
-## Script Usage                                  脚本用法 273
-### Read Downlink Information                    读取下行链路信息
-### Dump Contents to ASCII                       将内容转储为 ASCII
-### Extract an Individual Attribute              提取个体属性
-### Print Information from File                  从文件打印信息
-### Purify/Filter a TRK-2-34 to SIS Compliance   净化/过滤 TRK-2-34 以符合 SIS 规范
-### Read Uplink Information                      读取上行链路信息
-### Sort a TRK-2-34 File by Data Type            按数据类型对 TRK-2-34 文件进行排序
-
-# Disclaimer Statement              免责声明 477
-
-
-
-
-# trk234
-
 深空网络 TRK 2-34 跟踪和导航文件 (TNF) 数据格式的 Python 阅读器库和示例使用脚本。该库完全兼容 TRK-2-34 格式的 N 版本，但也适用于其更高版本。[^1]
 这些实用程序由加州理工学院喷气推进实验室的行星雷达和射电科学组 (332K) 开发。
 
